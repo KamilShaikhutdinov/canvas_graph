@@ -1,12 +1,10 @@
-import "./App.css";
 import CanvasJSReact from "./canvasjs.react";
-import React, { useState } from "react";
-import Papa from "papaparse";
+import React from "react";
 import Table from "./components/Table/Table";
+import "./App.css";
 
 function App() {
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
-  const allowedExtensions = ["csv"];
 
   const options = {
     animationEnabled: true,
@@ -60,77 +58,6 @@ function App() {
       },
     ],
   };
-  // This state will store the parsed data
-  const [data, setData] = useState([]);
-  const [isDataUploaded, setDataUploaded] = useState(false);
-
-  // It state will contain the error when
-  // correct file extension is not used
-  const [error, setError] = useState("");
-  console.log(error);
-
-  // It will store the file uploaded by the user
-  const [file, setFile] = useState("");
-
-  // This function will be called when
-  // the file input changes
-  const handleFileChange = (e) => {
-    setError("");
-
-    // Check if user has entered the file
-    if (e.target.files.length) {
-      const inputFile = e.target.files[0];
-
-      // Check the file extensions, if it not
-      // included in the allowed extensions
-      // we show the error
-      const fileExtension = inputFile?.type.split("/")[1];
-      if (!allowedExtensions.includes(fileExtension)) {
-        setError("Please input a csv file");
-        return;
-      }
-
-      // If input type is correct set the state
-      setFile(inputFile);
-    }
-  };
-
-  // const table = (
-  //   <table>
-  //     <tr key={"header"}>
-  //       {Object.keys(data[0]).map((key) => (
-  //         <th>{key}</th>
-  //       ))}
-  //     </tr>
-  //     {data.map((item) => (
-  //       <tr key={item.id}>
-  //         {Object.values(item).map((val) => (
-  //           <td>{val}</td>
-  //         ))}
-  //       </tr>
-  //     ))}
-  //   </table>
-  // );
-  const handleParse = () => {
-    // If user clicks the parse button without
-    // a file we show a error
-    if (!file) return setError("Enter a valid file");
-
-    // Initialize a reader which allows user
-    // to read any file or blob.
-    const reader = new FileReader();
-
-    // Event listener on reader when the file
-    // loads, we parse it and set the data.
-
-    reader.onload = async ({ target }) => {
-      const csv = Papa.parse(target.result, { header: true });
-      const parsedData = csv?.data;
-      setData(parsedData);
-      setDataUploaded(true);
-    };
-    reader.readAsText(file);
-  };
   return (
     <div className="App">
       <div>
@@ -140,39 +67,7 @@ function App() {
         />
       </div>
       <div>
-        <label htmlFor="csvInput" style={{ display: "block" }}>
-          Enter CSV File
-        </label>
-        <input
-          onChange={handleFileChange}
-          id="csvInput"
-          name="file"
-          type="File"
-        />
-        <div>
-          <button onClick={handleParse}>Parse</button>
-        </div>
-        {isDataUploaded && (
-          <div style={{ marginTop: "3rem" }}>
-            {
-              <table>
-                <tr key={"header"}>
-                  {Object.keys(data[0]).map((key) => (
-                    <th>{key}</th>
-                  ))}
-                </tr>
-                {data.map((item) => (
-                  <tr key={item.id}>
-                    {Object.values(item).map((val) => (
-                      <td>{val}</td>
-                    ))}
-                  </tr>
-                ))}
-              </table>
-            }
-          </div>
-        )}
-        {/* <Table></Table> */}
+        <Table />
       </div>
     </div>
   );
