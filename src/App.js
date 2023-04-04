@@ -1,18 +1,19 @@
 import CanvasJSReact from "./canvasjs.react";
-import React from "react";
+import React, { useState } from "react";
 import Table from "./components/Table/Table";
 import "./App.css";
 
 function App() {
+  const [graphData, setGraphData] = useState();
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
   const options = {
     animationEnabled: true,
     title: {
-      text: "Number of New Customers",
+      text: "Rustik's data",
     },
     axisY: {
-      title: "Number of Customers",
+      title: "some Y values",
     },
     toolTip: {
       shared: true,
@@ -20,7 +21,7 @@ function App() {
     data: [
       {
         type: "spline",
-        name: "2016",
+        name: graphData ? Object.values(graphData[0])[1] : "",
         showInLegend: true,
         dataPoints: [
           { y: 155, label: "Jan" },
@@ -39,7 +40,7 @@ function App() {
       },
       {
         type: "spline",
-        name: "2017",
+        name: graphData ? Object.values(graphData[5])[1] : "",
         showInLegend: true,
         dataPoints: [
           { y: 172, label: "Jan" },
@@ -58,16 +59,21 @@ function App() {
       },
     ],
   };
+  // const handleDraw = () => {
+  //   setGraphData(graphData);
+  // };
   return (
     <div className="App">
-      <div className="canvas">
-        <CanvasJSChart
-          options={options}
-          containerProps={{ width: "100%", height: "500px" }}
-        />
-      </div>
+      {graphData && (
+        <div className="canvas">
+          <CanvasJSChart
+            options={options}
+            containerProps={{ width: "100%", height: "500px" }}
+          />
+        </div>
+      )}
       <div>
-        <Table />
+        <Table setGraphData={setGraphData} />
       </div>
     </div>
   );

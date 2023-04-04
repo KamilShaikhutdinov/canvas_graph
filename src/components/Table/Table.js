@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Papa from "papaparse";
 import "./Table.css";
 
-function Table() {
-  const [data, setData] = useState([]);
+function Table({ setGraphData }) {
+  const [data, setData] = useState();
   const [isDataUploaded, setDataUploaded] = useState(false);
   const [error, setError] = useState("");
   const [file, setFile] = useState("");
+
+  useEffect(() => {
+    setGraphData(data);
+  }, [data, setGraphData]);
 
   const allowedExtensions = ["csv"];
 
