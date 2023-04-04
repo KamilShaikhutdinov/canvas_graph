@@ -60,10 +60,10 @@ function App() {
   };
   return (
     <div className="App">
-      <div>
+      <div className="canvas">
         <CanvasJSChart
           options={options}
-          containerProps={{ width: "50%", height: "300px" }}
+          containerProps={{ width: "100%", height: "500px" }}
         />
       </div>
       <div>
