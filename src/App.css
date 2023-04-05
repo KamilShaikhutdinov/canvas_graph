@@ -15,3 +15,31 @@ table{
   border: 3px solid green;
   padding: 10px;
 }
+
+
+.filterButton {
+  background-color:  #555555; 
+  transition-duration: 0.4s;
+  margin: 5px;
+  padding: 5px;
+  border-radius: 2px;
+  color: white;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.filterButton:hover {
+  transition-duration: 0.4s;
+  background-color:gray; 
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+.buttonContainer{
+  margin: 30px auto;
+  width: 80%;
+  padding: 10px;
+}
+.buttonContainer span{
+  display: block;
+  text-align: center;
+  margin: 10px;
+}

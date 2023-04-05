@@ -5,7 +5,19 @@ import "./App.css";
 
 function App() {
   const [graphData, setGraphData] = useState();
+  const [filteredData, setFilteredData] = useState(graphData);
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
+
+  const handleTeamFilter = (team) => {
+    const filtered = graphData.filter((item) => item["Team Name"] === team);
+    setFilteredData(filtered);
+
+    console.log(filteredData);
+  };
+
+  const uniqueTeams = graphData
+    ? [...new Set(graphData.map((item) => item["Team Name"]))]
+    : [];
 
   const options = {
     animationEnabled: true,
@@ -59,18 +71,29 @@ function App() {
       },
     ],
   };
-  // const handleDraw = () => {
-  //   setGraphData(graphData);
-  // };
   return (
     <div className="App">
       {graphData && (
-        <div className="canvas">
-          <CanvasJSChart
-            options={options}
-            containerProps={{ width: "100%", height: "500px" }}
-          />
-        </div>
+        <>
+          <div className="canvas">
+            <CanvasJSChart
+              options={options}
+              containerProps={{ width: "100%", height: "500px" }}
+            />
+          </div>
+          <div className="buttonContainer">
+            <span>Filter by team name</span>
+            {uniqueTeams.map((team, index) => (
+              <button
+                className="filterButton"
+                onClick={() => handleTeamFilter(team)}
+                key={index}
+              >
+                {team}
+              </button>
+            ))}
+          </div>
+        </>
       )}
       <div>
         <Table setGraphData={setGraphData} />
