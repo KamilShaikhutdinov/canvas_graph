@@ -6,19 +6,47 @@ import "./App.css";
 function App() {
   const [graphData, setGraphData] = useState();
   const [filteredData, setFilteredData] = useState(graphData);
+  const [chartData, setChartData] = useState();
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
   const handleTeamFilter = (team) => {
     const filtered = graphData.filter((item) => item["Team Name"] === team);
     setFilteredData(filtered);
-
-    console.log(filteredData);
   };
 
   const uniqueTeams = graphData
     ? [...new Set(graphData.map((item) => item["Team Name"]))]
     : [];
 
+  const handleStoryPointsClick = () => {
+    const uniqueAssignees = [
+      ...new Set(filteredData.map((item) => item.Assignee)),
+    ];
+    const data = uniqueAssignees.map((assignee) => ({
+      type: "spline",
+      name: assignee,
+      showInLegend: true,
+      dataPoints: filteredData
+        .filter((item) => item.Assignee === assignee)
+        .map((item) => ({
+          y: parseFloat(item["Story Points"]) || 0,
+          label: item["Status Category Changed"] || 0,
+        })),
+    }));
+    setChartData({
+      animationEnabled: true,
+      title: {
+        text: "Rustik's data",
+      },
+      axisY: {
+        title: "some Y values",
+      },
+      toolTip: {
+        shared: true,
+      },
+      data,
+    });
+  };
   const options = {
     animationEnabled: true,
     title: {
@@ -36,18 +64,8 @@ function App() {
         name: graphData ? Object.values(graphData[0])[1] : "",
         showInLegend: true,
         dataPoints: [
-          { y: 155, label: "Jan" },
-          { y: 150, label: "Feb" },
-          { y: 152, label: "Mar" },
-          { y: 148, label: "Apr" },
-          { y: 142, label: "May" },
-          { y: 150, label: "Jun" },
-          { y: 146, label: "Jul" },
-          { y: 149, label: "Aug" },
-          { y: 153, label: "Sept" },
-          { y: 158, label: "Oct" },
-          { y: 154, label: "Nov" },
-          { y: 150, label: "Dec" },
+          { y: 155, label: "2/3/2022 20:03:35" },
+          { y: 150, label: "2/17/2022 8:47:16" },
         ],
       },
       {
@@ -55,18 +73,8 @@ function App() {
         name: graphData ? Object.values(graphData[5])[1] : "",
         showInLegend: true,
         dataPoints: [
-          { y: 172, label: "Jan" },
-          { y: 173, label: "Feb" },
-          { y: 175, label: "Mar" },
-          { y: 172, label: "Apr" },
-          { y: 162, label: "May" },
-          { y: 165, label: "Jun" },
-          { y: 172, label: "Jul" },
-          { y: 168, label: "Aug" },
-          { y: 175, label: "Sept" },
-          { y: 170, label: "Oct" },
-          { y: 165, label: "Nov" },
-          { y: 169, label: "Dec" },
+          { y: 165, label: "3/3/2022 20:03:35" },
+          { y: 160, label: "5/17/2022 8:47:16" },
         ],
       },
     ],
@@ -76,8 +84,14 @@ function App() {
       {graphData && (
         <>
           <div className="canvas">
+            <div className="valuesFilter">
+              <button className="filterButton">Tasks summary</button>
+              <button className="filterButton" onClick={handleStoryPointsClick}>
+                Story points
+              </button>
+            </div>
             <CanvasJSChart
-              options={options}
+              options={chartData || options}
               containerProps={{ width: "100%", height: "500px" }}
             />
           </div>
