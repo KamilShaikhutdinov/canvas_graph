@@ -46,8 +46,8 @@ function Table({ setGraphData }) {
   return (
     <>
       <div className="parseForm">
-        <label htmlFor="csvInput" style={{ display: "block" }}>
-          Upload CSV File
+        <label for="csvInput" style={{ display: "block" }}>
+          <h2>Upload CSV File</h2>
         </label>
         <input
           onChange={handleFileChange}

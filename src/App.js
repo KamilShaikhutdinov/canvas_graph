@@ -70,53 +70,28 @@ function App() {
       data,
     });
   };
-  const options = {
-    animationEnabled: true,
-    title: {
-      text: "Rustik's data",
-    },
-    axisY: {
-      title: "Story points",
-    },
-    toolTip: {
-      shared: true,
-    },
-    data: [
-      {
-        type: "spline",
-        name: "",
-        showInLegend: true,
-        dataPoints: [
-          { y: 0, label: "" },
-          { y: 0, label: "" },
-        ],
-      },
-      {
-        type: "spline",
-        name: "",
-        showInLegend: true,
-        dataPoints: [
-          { y: 0, label: "" },
-          { y: 0, label: "" },
-        ],
-      },
-    ],
-  };
   return (
     <div className="App">
       {graphData && (
         <>
           <div className="canvas">
-            <div className="valuesFilter">
-              <button className="filterButton">Tasks summary</button>
-              <button className="filterButton" onClick={handleStoryPointsClick}>
-                Story points
-              </button>
-            </div>
-            <CanvasJSChart
-              options={chartData || options}
-              containerProps={{ width: "100%", height: "500px" }}
-            />
+            {filteredData && (
+              <>
+                <div className="valuesFilter">
+                  <button className="filterButton">Tasks summary</button>
+                  <button
+                    className="filterButton"
+                    onClick={handleStoryPointsClick}
+                  >
+                    Story points
+                  </button>
+                </div>
+                <CanvasJSChart
+                  options={chartData}
+                  containerProps={{ width: "100%", height: "500px" }}
+                />
+              </>
+            )}
           </div>
           <div className="buttonContainer">
             <span>Filter by team name</span>
