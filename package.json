@@ -1,7 +1,6 @@
 {
   "name": "canvas-chart",
   "version": "0.1.0",
-  "homepage": "http://KamilShaikhutdinov.github.io/canvas_graph",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -41,5 +40,6 @@
   },
   "devDependencies": {
     "gh-pages": "^5.0.0"
-  }
+  },
+  "homepage": "http://KamilShaikhutdinov.github.io/canvas_graph"
 }
