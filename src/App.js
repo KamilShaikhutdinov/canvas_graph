@@ -1,7 +1,10 @@
 import CanvasJSReact from "./canvasjs.react";
 import React, { useState } from "react";
+import moment from "moment";
+
 import Table from "./components/Table/Table";
 import "./App.css";
+import { sprintDates } from "./consts";
 
 function App() {
   const [graphData, setGraphData] = useState();
@@ -28,10 +31,29 @@ function App() {
       showInLegend: true,
       dataPoints: filteredData
         .filter((item) => item.Assignee === assignee)
-        .map((item) => ({
-          y: parseFloat(item["Story Points"]) || 0,
-          label: item["Status Category Changed"] || 0,
-        })),
+        .map((item) => {
+          const date = moment(
+            item["Status Category Changed"],
+            "M/D/YYYY H:m:s"
+          );
+          let sprintKey = "";
+
+          Object.entries(sprintDates).forEach(([key, value]) => {
+            const startDate = moment(value[0], "M/D/YYYY");
+            const endDate = moment(value[1], "M/D/YYYY");
+
+            if (date.isBetween(startDate, endDate)) {
+              sprintKey = key;
+              console.log(sprintKey);
+            }
+          });
+
+          return {
+            y: parseFloat(item["Story Points"]) || 0,
+            label: sprintKey,
+            base: -1,
+          };
+        }),
     }));
     setChartData({
       animationEnabled: true,
@@ -39,7 +61,8 @@ function App() {
         text: "Rustik's data",
       },
       axisY: {
-        title: "some Y values",
+        minimum: -1,
+        title: "Story Points",
       },
       toolTip: {
         shared: true,
@@ -53,7 +76,7 @@ function App() {
       text: "Rustik's data",
     },
     axisY: {
-      title: "some Y values",
+      title: "Story points",
     },
     toolTip: {
       shared: true,
@@ -61,20 +84,20 @@ function App() {
     data: [
       {
         type: "spline",
-        name: graphData ? Object.values(graphData[0])[1] : "",
+        name: "",
         showInLegend: true,
         dataPoints: [
-          { y: 155, label: "2/3/2022 20:03:35" },
-          { y: 150, label: "2/17/2022 8:47:16" },
+          { y: 0, label: "" },
+          { y: 0, label: "" },
         ],
       },
       {
         type: "spline",
-        name: graphData ? Object.values(graphData[5])[1] : "",
+        name: "",
         showInLegend: true,
         dataPoints: [
-          { y: 165, label: "3/3/2022 20:03:35" },
-          { y: 160, label: "5/17/2022 8:47:16" },
+          { y: 0, label: "" },
+          { y: 0, label: "" },
         ],
       },
     ],
