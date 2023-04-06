@@ -10,6 +10,7 @@ function App() {
   const [graphData, setGraphData] = useState();
   const [filteredData, setFilteredData] = useState(graphData);
   const [chartData, setChartData] = useState();
+  console.log(filteredData);
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
   const handleTeamFilter = (team) => {
@@ -31,6 +32,11 @@ function App() {
       showInLegend: true,
       dataPoints: filteredData
         .filter((item) => item.Assignee === assignee)
+        .sort((a, b) => {
+          const dateA = new Date(a["Status Category Changed"]);
+          const dateB = new Date(b["Status Category Changed"]);
+          return dateA - dateB;
+        })
         .map((item) => {
           const date = moment(
             item["Status Category Changed"],
@@ -44,7 +50,6 @@ function App() {
 
             if (date.isBetween(startDate, endDate)) {
               sprintKey = key;
-              console.log(sprintKey);
             }
           });
 
@@ -55,6 +60,7 @@ function App() {
           };
         }),
     }));
+
     setChartData({
       animationEnabled: true,
       title: {
