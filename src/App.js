@@ -4,7 +4,7 @@ import moment from "moment";
 
 import Table from "./components/Table/Table";
 import "./App.css";
-import { sprintDates } from "./consts";
+import { sprintDates, sprintNames } from "./consts";
 
 function App() {
   const [graphData, setGraphData] = useState();
@@ -29,6 +29,9 @@ function App() {
     const uniqueAssignees = [
       ...new Set(filteredData?.map((item) => item.Assignee)),
     ];
+
+    const sprintKeys = sprintNames.map((name) => name.replace("Sprint ", ""));
+
     const data = uniqueAssignees?.map((assignee) => ({
       type: "spline",
       name: assignee,
@@ -64,14 +67,45 @@ function App() {
         }),
     }));
 
+    data.forEach((assigneeData) => {
+      sprintKeys.forEach((sprintKey) => {
+        const hasDataPoint = assigneeData.dataPoints.some(
+          (dataPoint) => dataPoint.label === sprintKey
+        );
+        if (!hasDataPoint) {
+          assigneeData.dataPoints.push({
+            y: 0,
+            label: sprintKey,
+            base: -1,
+          });
+        }
+      });
+    });
+
     setChartData({
       animationEnabled: true,
       title: {
         text: "",
       },
+      axisX: {
+        title: "Sprint",
+        interval: 1,
+        labelAngle: -90,
+        labelMaxWidth: 80,
+        labelWrap: true,
+        valueFormatString: "",
+        crosshair: {
+          enabled: true,
+          snapToDataPoint: true,
+        },
+        intervalType: "number",
+        tickLength: 0,
+        tickColor: "rgba(0,0,0,0)",
+        lineThickness: 0,
+      },
       axisY: {
-        minimum: -1,
-        title: "Story Points",
+        minimum: 0,
+        title: "Number of tasks",
       },
       toolTip: {
         shared: true,
@@ -83,58 +117,56 @@ function App() {
     const uniqueAssignees = [
       ...new Set(filteredData?.map((item) => item.Assignee)),
     ];
-    const data = uniqueAssignees?.map((assignee) => ({
-      type: "spline",
-      name: assignee,
-      showInLegend: true,
-      dataPoints: filteredData
-        .filter((item) => item.Assignee === assignee)
-        .sort((a, b) => {
-          const dateA = new Date(a["Status Category Changed"]);
-          const dateB = new Date(b["Status Category Changed"]);
-          return dateA - dateB;
-        })
-        .reduce((accumulator, item) => {
-          const date = moment(
-            item["Status Category Changed"],
-            "M/D/YYYY H:m:s"
-          );
-          let sprintKey = "";
 
-          Object.entries(sprintDates).forEach(([key, value]) => {
-            const startDate = moment(value[0], "M/D/YYYY");
-            const endDate = moment(value[1], "M/D/YYYY");
+    const data = uniqueAssignees?.map((assignee) => {
+      const dataPoints = sprintNames.map((sprintName) => {
+        const sprintTasks = filteredData.filter(
+          (item) =>
+            item.Assignee === assignee &&
+            moment(item["Status Category Changed"], "M/D/YYYY H:m:s").isBetween(
+              moment(sprintDates[sprintName][0], "M/D/YYYY"),
+              moment(sprintDates[sprintName][1], "M/D/YYYY")
+            )
+        );
 
-            if (date.isBetween(startDate, endDate)) {
-              sprintKey = key;
-            }
-          });
+        return {
+          y: sprintTasks.length || 0,
+          label: sprintName,
+          base: -1,
+        };
+      });
 
-          const existingDataPointIndex = accumulator.findIndex(
-            (dataPoint) => dataPoint.label === sprintKey
-          );
-
-          if (existingDataPointIndex !== -1) {
-            accumulator[existingDataPointIndex].y += 1;
-          } else {
-            accumulator.push({
-              y: 1,
-              label: sprintKey,
-              base: -1,
-            });
-          }
-
-          return accumulator;
-        }, []),
-    }));
+      return {
+        type: "spline",
+        name: assignee,
+        showInLegend: true,
+        dataPoints,
+      };
+    });
 
     setChartData({
       animationEnabled: true,
       title: {
         text: "",
       },
+      axisX: {
+        title: "Sprint",
+        interval: 1,
+        labelAngle: -90,
+        labelMaxWidth: 80,
+        labelWrap: true,
+        valueFormatString: "",
+        crosshair: {
+          enabled: true,
+          snapToDataPoint: true,
+        },
+        intervalType: "number",
+        tickLength: 0,
+        tickColor: "rgba(0,0,0,0)",
+        lineThickness: 0,
+      },
       axisY: {
-        minimum: -1,
+        minimum: 0,
         title: "Number of tasks",
       },
       toolTip: {
