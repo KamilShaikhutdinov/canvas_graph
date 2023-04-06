@@ -10,7 +10,7 @@ function App() {
   const [graphData, setGraphData] = useState();
   const [filteredData, setFilteredData] = useState(graphData);
   const [chartData, setChartData] = useState();
-  console.log(filteredData);
+
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
   const handleTeamFilter = (team) => {
@@ -64,7 +64,7 @@ function App() {
     setChartData({
       animationEnabled: true,
       title: {
-        text: "Rustik's data",
+        text: "",
       },
       axisY: {
         minimum: -1,
@@ -128,11 +128,11 @@ function App() {
     setChartData({
       animationEnabled: true,
       title: {
-        text: "Rustik's data",
+        text: "",
       },
       axisY: {
         minimum: -1,
-        title: "Number of Items",
+        title: "Number of tasks",
       },
       toolTip: {
         shared: true,
@@ -140,6 +140,7 @@ function App() {
       data,
     });
   };
+
   return (
     <div className="App">
       {graphData && (
