@@ -65,7 +65,7 @@ function Table({ setGraphData }) {
       </div>
       {isDataUploaded && (
         <div style={{ marginTop: "3rem" }}>
-          {
+          {/* {
             <table>
               <tr key={"header"}>
                 {Object.keys(data[0]).map((key) => (
@@ -80,7 +80,7 @@ function Table({ setGraphData }) {
                 </tr>
               ))}
             </table>
-          }
+          } */}
         </div>
       )}
     </>

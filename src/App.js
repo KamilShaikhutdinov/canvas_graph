@@ -162,24 +162,25 @@ function App() {
                     Story points
                   </button>
                 </div>
-                <CanvasJSChart
-                  options={chartData}
-                  containerProps={{ width: "100%", height: "500px" }}
-                />
               </>
             )}
           </div>
-          <div className="buttonContainer">
-            <span>Filter by team name</span>
-            {uniqueTeams.map((team, index) => (
-              <button
-                className="filterButton"
-                onClick={() => handleTeamFilter(team)}
-                key={index}
-              >
-                {team}
-              </button>
-            ))}
+          <div className="chartWithButtonsContainer">
+            <div className="buttonContainer">
+              {uniqueTeams.map((team, index) => (
+                <button
+                  className="filterButton"
+                  onClick={() => handleTeamFilter(team)}
+                  key={index}
+                >
+                  {team}
+                </button>
+              ))}
+            </div>
+            <CanvasJSChart
+              options={chartData}
+              containerProps={{ width: "90%", height: "500px" }}
+            />
           </div>
         </>
       )}

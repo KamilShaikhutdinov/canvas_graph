@@ -10,9 +10,8 @@ table{
 }
 
 .canvas{
-  display: flex;
-  margin: 30px 15%;
-  width: 50%;
+  margin: 30px;
+  width: 100%;
   padding: 10px;
 }
 
@@ -33,19 +32,18 @@ table{
 }
 
 .buttonContainer{
-  margin: 30px auto;
-  width: 80%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 10%;
   padding: 10px;
-}
-.buttonContainer span{
-  display: block;
-  text-align: center;
-  margin: 10px;
 }
 
 .valuesFilter{
   display: flex;
-  flex-direction: column;
   justify-content: center;
   margin-right: 20px;
+}
+.chartWithButtonsContainer{
+  display: flex;
 }
