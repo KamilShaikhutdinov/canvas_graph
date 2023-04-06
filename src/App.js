@@ -14,6 +14,12 @@ function App() {
 
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
+  const removeFirstWord = (str) => {
+    const words = str.split(" ");
+    words.shift();
+    return words.join(" ");
+  };
+
   const handleTeamFilter = (team) => {
     setActiveButton(team);
     handleTaskSummaryClick();
@@ -75,7 +81,7 @@ function App() {
         if (!hasDataPoint) {
           assigneeData.dataPoints.push({
             y: 0,
-            label: sprintKey,
+            label: removeFirstWord(sprintKey),
             base: -1,
           });
         }
@@ -90,15 +96,11 @@ function App() {
       axisX: {
         title: "Sprint",
         interval: 1,
-        labelAngle: -90,
+        labelAngle: -50,
         labelMaxWidth: 80,
         labelWrap: true,
         valueFormatString: "",
-        crosshair: {
-          enabled: true,
-          snapToDataPoint: true,
-        },
-        intervalType: "number",
+        labelFontSize: 12,
         tickLength: 0,
         tickColor: "rgba(0,0,0,0)",
         lineThickness: 0,
@@ -131,7 +133,7 @@ function App() {
 
         return {
           y: sprintTasks.length || 0,
-          label: sprintName,
+          label: removeFirstWord(sprintName),
           base: -1,
         };
       });
@@ -145,6 +147,7 @@ function App() {
     });
 
     setChartData({
+      theme: "light2",
       animationEnabled: true,
       title: {
         text: "",
@@ -152,18 +155,15 @@ function App() {
       axisX: {
         title: "Sprint",
         interval: 1,
-        labelAngle: -90,
+        labelAngle: -50,
         labelMaxWidth: 80,
-        labelWrap: true,
+        labelWrap: false,
         valueFormatString: "",
-        crosshair: {
-          enabled: true,
-          snapToDataPoint: true,
-        },
         intervalType: "number",
         tickLength: 0,
         tickColor: "rgba(0,0,0,0)",
         lineThickness: 0,
+        labelFontSize: 14,
       },
       axisY: {
         minimum: 0,
