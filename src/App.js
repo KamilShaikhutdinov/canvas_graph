@@ -76,6 +76,70 @@ function App() {
       data,
     });
   };
+  const handleTaskSummaryClick = () => {
+    const uniqueAssignees = [
+      ...new Set(filteredData.map((item) => item.Assignee)),
+    ];
+    const data = uniqueAssignees.map((assignee) => ({
+      type: "spline",
+      name: assignee,
+      showInLegend: true,
+      dataPoints: filteredData
+        .filter((item) => item.Assignee === assignee)
+        .sort((a, b) => {
+          const dateA = new Date(a["Status Category Changed"]);
+          const dateB = new Date(b["Status Category Changed"]);
+          return dateA - dateB;
+        })
+        .reduce((accumulator, item) => {
+          const date = moment(
+            item["Status Category Changed"],
+            "M/D/YYYY H:m:s"
+          );
+          let sprintKey = "";
+
+          Object.entries(sprintDates).forEach(([key, value]) => {
+            const startDate = moment(value[0], "M/D/YYYY");
+            const endDate = moment(value[1], "M/D/YYYY");
+
+            if (date.isBetween(startDate, endDate)) {
+              sprintKey = key;
+            }
+          });
+
+          const existingDataPointIndex = accumulator.findIndex(
+            (dataPoint) => dataPoint.label === sprintKey
+          );
+
+          if (existingDataPointIndex !== -1) {
+            accumulator[existingDataPointIndex].y += 1;
+          } else {
+            accumulator.push({
+              y: 1,
+              label: sprintKey,
+              base: -1,
+            });
+          }
+
+          return accumulator;
+        }, []),
+    }));
+
+    setChartData({
+      animationEnabled: true,
+      title: {
+        text: "Rustik's data",
+      },
+      axisY: {
+        minimum: -1,
+        title: "Number of Items",
+      },
+      toolTip: {
+        shared: true,
+      },
+      data,
+    });
+  };
   return (
     <div className="App">
       {graphData && (
@@ -84,7 +148,12 @@ function App() {
             {filteredData && (
               <>
                 <div className="valuesFilter">
-                  <button className="filterButton">Tasks summary</button>
+                  <button
+                    className="filterButton"
+                    onClick={handleTaskSummaryClick}
+                  >
+                    Task summary
+                  </button>
                   <button
                     className="filterButton"
                     onClick={handleStoryPointsClick}
