@@ -10,23 +10,26 @@ function App() {
   const [graphData, setGraphData] = useState();
   const [filteredData, setFilteredData] = useState(graphData);
   const [chartData, setChartData] = useState();
+  const [activeButton, setActiveButton] = useState(null);
 
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
   const handleTeamFilter = (team) => {
+    setActiveButton(team);
+    handleTaskSummaryClick();
     const filtered = graphData.filter((item) => item["Team Name"] === team);
     setFilteredData(filtered);
   };
 
   const uniqueTeams = graphData
-    ? [...new Set(graphData.map((item) => item["Team Name"]))]
+    ? [...new Set(graphData?.map((item) => item["Team Name"]))]
     : [];
 
   const handleStoryPointsClick = () => {
     const uniqueAssignees = [
-      ...new Set(filteredData.map((item) => item.Assignee)),
+      ...new Set(filteredData?.map((item) => item.Assignee)),
     ];
-    const data = uniqueAssignees.map((assignee) => ({
+    const data = uniqueAssignees?.map((assignee) => ({
       type: "spline",
       name: assignee,
       showInLegend: true,
@@ -37,7 +40,7 @@ function App() {
           const dateB = new Date(b["Status Category Changed"]);
           return dateA - dateB;
         })
-        .map((item) => {
+        ?.map((item) => {
           const date = moment(
             item["Status Category Changed"],
             "M/D/YYYY H:m:s"
@@ -78,9 +81,9 @@ function App() {
   };
   const handleTaskSummaryClick = () => {
     const uniqueAssignees = [
-      ...new Set(filteredData.map((item) => item.Assignee)),
+      ...new Set(filteredData?.map((item) => item.Assignee)),
     ];
-    const data = uniqueAssignees.map((assignee) => ({
+    const data = uniqueAssignees?.map((assignee) => ({
       type: "spline",
       name: assignee,
       showInLegend: true,
@@ -167,9 +170,11 @@ function App() {
           </div>
           <div className="chartWithButtonsContainer">
             <div className="buttonContainer">
-              {uniqueTeams.map((team, index) => (
+              {uniqueTeams?.map((team, index) => (
                 <button
-                  className="filterButton"
+                  className={`filterButton ${
+                    activeButton === team ? "active" : ""
+                  }`}
                   onClick={() => handleTeamFilter(team)}
                   key={index}
                 >
@@ -179,7 +184,7 @@ function App() {
             </div>
             <CanvasJSChart
               options={chartData}
-              containerProps={{ width: "90%", height: "500px" }}
+              containerProps={{ width: "90%", height: "800px" }}
             />
           </div>
         </>
