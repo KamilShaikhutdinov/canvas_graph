@@ -2,7 +2,7 @@ import CanvasJSReact from "./canvasjs.react";
 import React, { useState, useEffect, useCallback } from "react";
 import moment from "moment";
 
-import Table from "./components/Table/Table";
+import Uploader from "./components/Uploader/Uploader";
 import "./App.css";
 import { sprintDates, sprintNames } from "./consts";
 
@@ -220,7 +220,7 @@ function App() {
         </>
       )}
       <div>
-        <Table setGraphData={setGraphData} />
+        <Uploader setGraphData={setGraphData} />
       </div>
     </div>
   );

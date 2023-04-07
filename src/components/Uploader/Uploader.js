@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Papa from "papaparse";
-import "./Table.css";
+import "./Uploader.css";
 
-function Table({ setGraphData }) {
+function Uploader({ setGraphData }) {
   const [data, setData] = useState();
   const [isDataUploaded, setDataUploaded] = useState(false);
   const [error, setError] = useState("");
@@ -63,28 +63,8 @@ function Table({ setGraphData }) {
         </div>
         <span className="error">{error}</span>
       </div>
-      {isDataUploaded && (
-        <div style={{ marginTop: "3rem" }}>
-          {/* {
-            <table>
-              <tr key={"header"}>
-                {Object.keys(data[0]).map((key) => (
-                  <th>{key}</th>
-                ))}
-              </tr>
-              {data.map((item) => (
-                <tr key={item.id}>
-                  {Object.values(item).map((val) => (
-                    <td>{val}</td>
-                  ))}
-                </tr>
-              ))}
-            </table>
-          } */}
-        </div>
-      )}
     </>
   );
 }
 
-export default Table;
+export default Uploader;
