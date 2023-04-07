@@ -1,5 +1,5 @@
 import CanvasJSReact from "./canvasjs.react";
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import moment from "moment";
 
 import Table from "./components/Table/Table";
@@ -11,6 +11,8 @@ function App() {
   const [filteredData, setFilteredData] = useState(graphData);
   const [chartData, setChartData] = useState();
   const [activeButton, setActiveButton] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  console.log(filteredData);
 
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -21,6 +23,7 @@ function App() {
   };
 
   const handleTeamFilter = (team) => {
+    setSelectedTeam(team);
     setActiveButton(team);
     handleTaskSummaryClick();
     const filtered = graphData.filter((item) => item["Team Name"] === team);
@@ -115,7 +118,7 @@ function App() {
       data,
     });
   };
-  const handleTaskSummaryClick = () => {
+  const handleTaskSummaryClick = useCallback(() => {
     const uniqueAssignees = [
       ...new Set(filteredData?.map((item) => item.Assignee)),
     ];
@@ -174,7 +177,13 @@ function App() {
       },
       data,
     });
-  };
+  }, [filteredData]);
+
+  useEffect(() => {
+    if (selectedTeam) {
+      handleTaskSummaryClick();
+    }
+  }, [selectedTeam, handleTaskSummaryClick]);
 
   return (
     <div className="App">
