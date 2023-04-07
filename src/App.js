@@ -12,7 +12,6 @@ function App() {
   const [chartData, setChartData] = useState();
   const [activeButton, setActiveButton] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
-  console.log(filteredData);
 
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -109,7 +108,7 @@ function App() {
         lineThickness: 0,
       },
       axisY: {
-        minimum: 0,
+        minimum: -1,
         title: "Number of tasks",
       },
       toolTip: {
@@ -169,7 +168,7 @@ function App() {
         labelFontSize: 14,
       },
       axisY: {
-        minimum: 0,
+        minimum: -1,
         title: "Number of tasks",
       },
       toolTip: {
