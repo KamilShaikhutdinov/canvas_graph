@@ -4,7 +4,6 @@ import "./Uploader.css";
 
 function Uploader({ setGraphData }) {
   const [data, setData] = useState();
-  const [isDataUploaded, setDataUploaded] = useState(false);
   const [error, setError] = useState("");
   const [file, setFile] = useState("");
 
@@ -39,7 +38,6 @@ function Uploader({ setGraphData }) {
       const csv = Papa.parse(target.result, { header: true });
       const parsedData = csv?.data;
       setData(parsedData);
-      setDataUploaded(true);
     };
     reader.readAsText(file);
   };

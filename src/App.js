@@ -82,7 +82,7 @@ function App() {
       },
       axisX: {
         title: "Sprint",
-        interval: 2,
+        interval: 1,
         labelAngle: -50,
         labelMaxWidth: 80,
         labelWrap: true,
@@ -91,7 +91,6 @@ function App() {
         tickLength: 2,
         tickColor: "rgba(0,0,0,0)",
         lineThickness: 0,
-        minimum: -1,
         dataPoints: sprintNames.map((sprintKey) => ({
           label: removeFirstWord(sprintKey),
         })),
