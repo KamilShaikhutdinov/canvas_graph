@@ -38,78 +38,67 @@ function App() {
       ...new Set(filteredData?.map((item) => item.Assignee)),
     ];
 
-    const sprintKeys = sprintNames.map((name) => name.replace("Sprint ", ""));
-
-    const data = uniqueAssignees?.map((assignee) => ({
-      type: "spline",
-      name: assignee,
-      showInLegend: true,
-      dataPoints: filteredData
-        .filter((item) => item.Assignee === assignee)
-        .sort((a, b) => {
-          const dateA = new Date(a["Status Category Changed"]);
-          const dateB = new Date(b["Status Category Changed"]);
-          return dateA - dateB;
-        })
-        ?.map((item) => {
-          const date = moment(
-            item["Status Category Changed"],
-            "M/D/YYYY H:m:s"
-          );
-          let sprintKey = "";
-
-          Object.entries(sprintDates).forEach(([key, value]) => {
-            const startDate = moment(value[0], "M/D/YYYY");
-            const endDate = moment(value[1], "M/D/YYYY");
-
-            if (date.isBetween(startDate, endDate)) {
-              sprintKey = key;
+    const data = uniqueAssignees?.map((assignee) => {
+      const assigneeDataPoints = [];
+      sprintNames.forEach((sprintKey) => {
+        let sprintDataPoint = {
+          y: 0,
+          label: removeFirstWord(sprintKey),
+          base: -1,
+        };
+        filteredData.forEach((item) => {
+          if (item.Assignee === assignee) {
+            const date = moment(
+              item["Status Category Changed"],
+              "M/D/YYYY H:m:s"
+            );
+            const sprintStartDate = moment(
+              sprintDates[sprintKey][0],
+              "M/D/YYYY"
+            );
+            const sprintEndDate = moment(sprintDates[sprintKey][1], "M/D/YYYY");
+            if (
+              date.isBetween(sprintStartDate, sprintEndDate, undefined, "[]")
+            ) {
+              sprintDataPoint.y += parseFloat(item["Story Points"]) || 0;
             }
-          });
-
-          return {
-            y: parseFloat(item["Story Points"]) || 0,
-            label: sprintKey,
-            base: -1,
-          };
-        }),
-    }));
-
-    data.forEach((assigneeData) => {
-      sprintKeys.forEach((sprintKey) => {
-        const hasDataPoint = assigneeData.dataPoints.some(
-          (dataPoint) => dataPoint.label === sprintKey
-        );
-        if (!hasDataPoint) {
-          assigneeData.dataPoints.push({
-            y: 0,
-            label: removeFirstWord(sprintKey),
-            base: -1,
-          });
-        }
+          }
+        });
+        assigneeDataPoints.push(sprintDataPoint);
       });
+      return {
+        type: "spline",
+        name: assignee,
+        showInLegend: true,
+        dataPoints: assigneeDataPoints,
+      };
     });
 
     setChartData({
+      theme: "light2",
       animationEnabled: true,
       title: {
         text: "",
       },
       axisX: {
         title: "Sprint",
-        interval: 1,
+        interval: 2,
         labelAngle: -50,
         labelMaxWidth: 80,
         labelWrap: true,
         valueFormatString: "",
         labelFontSize: 12,
-        tickLength: 0,
+        tickLength: 2,
         tickColor: "rgba(0,0,0,0)",
         lineThickness: 0,
+        minimum: -1,
+        dataPoints: sprintNames.map((sprintKey) => ({
+          label: removeFirstWord(sprintKey),
+        })),
       },
       axisY: {
         minimum: -1,
-        title: "Number of tasks",
+        title: "Story points",
       },
       toolTip: {
         shared: true,
@@ -117,6 +106,7 @@ function App() {
       data,
     });
   };
+
   const handleTaskSummaryClick = useCallback(() => {
     const uniqueAssignees = [
       ...new Set(filteredData?.map((item) => item.Assignee)),
