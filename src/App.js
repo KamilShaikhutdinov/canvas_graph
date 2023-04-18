@@ -7,11 +7,12 @@ import "./App.css";
 import { sprintDates, sprintNames } from "./consts";
 
 function App() {
-  const [graphData, setGraphData] = useState();
+  const [graphData, setGraphData] = useState([]);
   const [filteredData, setFilteredData] = useState(graphData);
-  const [chartData, setChartData] = useState();
+  const [chartData, setChartData] = useState("");
   const [activeButton, setActiveButton] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
+  const [uniqueTeamNames, setUniqueTeamNames] = useState(null);
 
   const CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
@@ -25,19 +26,14 @@ function App() {
     setSelectedTeam(team);
     setActiveButton(team);
     handleTaskSummaryClick();
-    const filtered = graphData.filter((item) => item["Team Name"] === team);
+    const filtered = graphData.filter((item) => item["Team name"] === team);
     setFilteredData(filtered);
   };
-
-  const uniqueTeams = graphData
-    ? [...new Set(graphData?.map((item) => item["Team Name"]))]
-    : [];
 
   const handleStoryPointsClick = () => {
     const uniqueAssignees = [
       ...new Set(filteredData?.map((item) => item.Assignee)),
     ];
-
     const data = uniqueAssignees?.map((assignee) => {
       const assigneeDataPoints = [];
       sprintNames.forEach((sprintKey) => {
@@ -199,7 +195,7 @@ function App() {
           </div>
           <div className="chartWithButtonsContainer">
             <div className="buttonContainer">
-              {uniqueTeams?.map((team, index) => (
+              {uniqueTeamNames?.map((team, index) => (
                 <button
                   className={`filterButton ${
                     activeButton === team ? "active" : ""
@@ -219,7 +215,10 @@ function App() {
         </>
       )}
       <div>
-        <Uploader setGraphData={setGraphData} />
+        <Uploader
+          setGraphData={setGraphData}
+          setUniqueTeamNames={setUniqueTeamNames}
+        />
       </div>
     </div>
   );
